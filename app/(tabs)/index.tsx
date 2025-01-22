@@ -1,74 +1,83 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, TouchableOpacity } from "react-native";
+import React, { Suspense } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Canvas } from "@react-three/fiber";
+import { D20 } from "@/components/D20";
+import useControls from "r3f-native-orbitcontrols"
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+type Props = {};
 
-export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
+const Index = (props: Props) => {
+    const [OrbitControls, event] = useControls()
+    return (
+        <SafeAreaView style={styles.container}>
+            <StatusBar animated barStyle={"light-content"} />
+            <View style={styles.textContainer}>
+                <Text style={styles.textTitle}>D20 Virtual</Text>
+                <Text style={styles.text}>
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                     Explicabo, alias voluptatibus! Vero voluptate quae eum 
+                     saepe quam, beatae dolorem labore deserunt quibusdam iu
+                </Text>
+            </View>
+            <View style={styles.modelContainer} {...event}>
+                <Canvas>
+                    <OrbitControls />
+                    <directionalLight position={[1, 0, 0]} args={["white", 2]}/>
+                    <directionalLight position={[-1, 0, 0]} args={["white", 2]}/>
+                    <directionalLight position={[0, 0, 1]} args={["white", 2]}/>
+                    <directionalLight position={[0, 0, -1]} args={["white", 2]}/>
+                    <directionalLight position={[0, 1, 0]} args={["white", 15]}/>
+                    <directionalLight position={[0, -1, 0]} args={["white", 2]}/>
+                    <Suspense>
+                        <D20 />
+                    </Suspense>
+                </Canvas>
+            </View>
+            <TouchableOpacity style={styles.button}>
+                <Text style={ styles.textButton }>Rolar Dado</Text>
+            </TouchableOpacity>
+        </SafeAreaView>
+    )
 }
 
+export default Index;
+
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+    container: {
+        flex: 1,
+        backgroundColor: "black",
+    },
+    modelContainer: {
+        flex: 1,
+    },
+    textContainer: {
+        gap: 4,
+        marginVertical: 20,
+    },
+    textTitle: {
+        fontFamily: "SpaceMono-Regular",
+        color: "white",
+        fontSize: 18,
+        textAlign: "center",
+    },
+    text: {
+        fontFamily: "SpaceMono-Regular",
+        color: "white",
+        fontSize: 14,
+        textAlign: "center",
+    },
+    button: {
+        backgroundColor: "white",
+        padding: 14,
+        margin: 20,
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 8,
+    },
+    textButton: {
+        fontFamily: "SpaceMono-Regular",
+        color: "black",
+        fontSize: 14,
+    }
+})
