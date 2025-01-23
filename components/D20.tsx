@@ -25,13 +25,14 @@ type GLTFResult = GLTF & {
 export function D20(props: JSX.IntrinsicElements['group']) {
   const { nodes, materials } = useGLTF(Asset.fromModule(require("../assets/models/20_sides_icosahedron_dice.glb")).uri) as GLTFResult;
   return (
-    <group {...props} dispose={null}>
+    <group {...props} dispose={null} position={[0, 0, 0]}>
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.Object_2.geometry}
         material={materials['Scene_-_Root']}
         rotation={[-Math.PI / 2, 0, 0]}
+        scale={0.05}
       />
     </group>
   )

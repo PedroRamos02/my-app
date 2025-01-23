@@ -1,14 +1,18 @@
 import { View, Text, StyleSheet, StatusBar, TouchableOpacity } from "react-native";
-import React, { Suspense } from "react";
+import React, { Suspense, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Canvas } from "@react-three/fiber";
 import { D20 } from "@/components/D20";
 import useControls from "r3f-native-orbitcontrols"
+import Trigger from "@/components/Trigger";
+import Loader from "@/components/Loader";
+import Gradient from "@/components/Gradient";
 
 type Props = {};
 
 const Index = (props: Props) => {
-    const [OrbitControls, event] = useControls()
+    const [OrbitControls, event] = useControls();
+    const [loading, setLoading] = useState(false);
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar animated barStyle={"light-content"} />
@@ -21,15 +25,17 @@ const Index = (props: Props) => {
                 </Text>
             </View>
             <View style={styles.modelContainer} {...event}>
+                <Gradient />
+                {loading && <Loader />}
                 <Canvas>
-                    <OrbitControls />
+                    <OrbitControls  enablePan={false} enableZoom={false}/>
                     <directionalLight position={[1, 0, 0]} args={["white", 2]}/>
                     <directionalLight position={[-1, 0, 0]} args={["white", 2]}/>
                     <directionalLight position={[0, 0, 1]} args={["white", 2]}/>
                     <directionalLight position={[0, 0, -1]} args={["white", 2]}/>
                     <directionalLight position={[0, 1, 0]} args={["white", 15]}/>
                     <directionalLight position={[0, -1, 0]} args={["white", 2]}/>
-                    <Suspense>
+                    <Suspense fallback={<Trigger setLoading={setLoading} />}>
                         <D20 />
                     </Suspense>
                 </Canvas>
